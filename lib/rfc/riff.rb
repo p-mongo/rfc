@@ -45,7 +45,9 @@ class Riff < RSpec::Core::Formatters::BaseTextFormatter
   def report_progress
     this_percent = @completed_count * 100 / total_count
     if @reported_percent != this_percent
-      progress_msg = %Q`#{this_percent}% (#{@completed_count}/#{@total_count} examples) complete`
+      progress_msg = %Q`\
+#{Time.now.strftime('[%Y-%m-%d %H:%M:%S %z]')} \
+#{this_percent}% (#{@completed_count}/#{@total_count} examples) complete`
       if @pending_count > 0
         progress_msg += ", #{@pending_count} pending"
       end
