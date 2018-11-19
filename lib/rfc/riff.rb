@@ -8,6 +8,11 @@ class Riff < RSpec::Core::Formatters::BaseTextFormatter
 
   attr_reader :total_count, :passed_count, :failed_count, :completed_count
 
+  class << self
+    attr_accessor :heartbeat_interval
+  end
+  self.heartbeat_interval = 10
+
   def start(notification)
     @total_count = notification.count
     @passed_count = 0
@@ -44,7 +49,9 @@ class Riff < RSpec::Core::Formatters::BaseTextFormatter
 
   def report_progress
     this_percent = @completed_count * 100 / total_count
-    if @reported_percent != this_percent
+    if @reported_percent != this_percent || @reported_at.nil? ||
+      Time.now-@reported_at > self.class.heartbeat_interval
+    then
       progress_msg = %Q`\
 #{Time.now.strftime('[%Y-%m-%d %H:%M:%S %z]')} \
 #{this_percent}% (#{@completed_count}/#{@total_count} examples) complete`
@@ -56,6 +63,7 @@ class Riff < RSpec::Core::Formatters::BaseTextFormatter
       end
       output.puts progress_msg
       @reported_percent = this_percent
+      @reported_at = Time.now
     end
   end
 
