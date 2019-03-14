@@ -1,5 +1,5 @@
 require 'rspec/core'
-require 'rspec/core/formatters/base_text_formatter'
+RSpec::Support.require_rspec_core "formatters/base_text_formatter"
 
 module Rfc
 class Riff < RSpec::Core::Formatters::BaseTextFormatter

@@ -13,6 +13,13 @@ It has the following features;
 - Timestamped percentage progress output
 - No output overwrites or terminal manipulation
 
+## Announce formatter (Announce)
+
+This formatter is similar to the standard RSpec documentation formatter,
+but prints the description of each test prior to executing it.
+It is intended primarily for debugging, where a breakpoint might be hit
+by global test setup code as well as a specific test, or by multiple tests.
+
 ## License
 
 MIT
