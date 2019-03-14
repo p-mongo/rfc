@@ -13,12 +13,20 @@ It has the following features;
 - Timestamped percentage progress output
 - No output overwrites or terminal manipulation
 
-## Announce formatter (Announce)
+## Announce Formatter (Announce)
 
 This formatter is similar to the standard RSpec documentation formatter,
 but prints the description of each test prior to executing it.
 It is intended primarily for debugging, where a breakpoint might be hit
 by global test setup code as well as a specific test, or by multiple tests.
+
+This formatter reports failures at the end of the test run, like
+RSpec's documentation formatter does.
+
+## Announce Insta-Failing Formatter (AIF)
+
+This is the announce formatter with insta-fail feature. It reports
+failures as soon as they happen, after each example is executed.
 
 ## License
 
