@@ -2,7 +2,7 @@
 
 A collection of RSpec formatters.
 
-## RSpec Insta-Failing Formatter (RIFF)
+## RSpec Insta-Failing Formatter (Rif, Riff)
 
 RIFF was originally developed for running large test suites in a
 continuous integration environment, where the runs are non-interactive
@@ -23,7 +23,7 @@ by global test setup code as well as a specific test, or by multiple tests.
 This formatter reports failures at the end of the test run, like
 RSpec's documentation formatter does.
 
-## Announce Insta-Failing Formatter (AIF)
+## Announce Insta-Failing Formatter (Aif, AIF)
 
 This is the announce formatter with insta-fail feature. It reports
 failures as soon as they happen, after each example is executed.

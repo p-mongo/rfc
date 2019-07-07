@@ -1,7 +1,7 @@
 require 'rfc/announce'
 
 module Rfc
-class AIF < Announce
+class Aif < Announce
   RSpec::Core::Formatters.register self,
     :example_group_started, :example_group_finished,
     :start, :example_started,
@@ -26,4 +26,6 @@ class AIF < Announce
   end
 
 end
+
+AIF = Aif
 end
