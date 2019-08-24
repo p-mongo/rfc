@@ -11,6 +11,7 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
 
   class << self
     attr_accessor :heartbeat_interval
+    attr_accessor :output_object_space_stats
   end
   self.heartbeat_interval = 10
 
@@ -61,6 +62,9 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
       end
       if @failed_count > 0
         progress_msg += ", #{@failed_count} failed"
+      end
+      if self.class.output_object_space_stats
+        progress_msg += "; objects: #{ObjectSpace.count_objects[:TOTAL]} total, #{ObjectSpace.count_objects[:FREE]} free"
       end
       output.puts progress_msg
       @reported_percent = this_percent

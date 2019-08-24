@@ -2,13 +2,13 @@
 
 Gem::Specification.new do |s|
   s.name        = "rfc"
-  s.version     = "0.0.4"
+  s.version     = "0.0.5"
   s.platform    = Gem::Platform::RUBY
   s.license     = "MIT"
   s.authors     = ["Oleg Pudeyev"]
   s.email       = "oleg@olegp.name"
   s.homepage    = "https://github.com/p-mongo/rfc"
-  s.summary     = "rfc-0.0.4"
+  s.summary     = "rfc-0.0.5"
   s.description = "RSpec Formatter Collection including a concise insta-failing formatter"
 
   s.files            = `git ls-files -- lib/*`.split("\n")
