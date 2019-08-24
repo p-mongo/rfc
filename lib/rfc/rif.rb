@@ -11,6 +11,9 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
 
   class << self
     attr_accessor :heartbeat_interval
+
+    # ObjectSpace statistics are generally not available on JRuby:
+    # RuntimeError (ObjectSpace is disabled; each_object will only work with Class, pass -X+O to enable)
     attr_accessor :output_object_space_stats
   end
   self.heartbeat_interval = 10
