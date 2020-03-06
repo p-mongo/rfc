@@ -28,7 +28,7 @@ class Announce < RSpec::Core::Formatters::BaseTextFormatter
   def example_started(notification)
     example = notification.example
     output.puts(RSpec::Core::Formatters::ConsoleCodes.wrap(
-      "#{current_indentation}#{example.description.strip}...", :blue))
+      "#{current_indentation}#{example.description.strip}: #{notification.example.id}", :blue))
   end
 
   def example_passed(passed)
