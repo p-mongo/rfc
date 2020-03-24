@@ -56,6 +56,12 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
   end
 
   def report_progress
+    if total_count == 0
+      # When a test suite has no examples or they are all filtered out,
+      # there is no meaningful progress to report.
+      return
+    end
+
     this_percent = @completed_count * 100 / total_count
     if @reported_percent != this_percent || @reported_at.nil? ||
       Time.now-@reported_at > self.class.heartbeat_interval
