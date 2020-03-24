@@ -1,4 +1,5 @@
 require 'rspec/core'
+require 'rfc/cpu_time_averager'
 RSpec::Support.require_rspec_core "formatters/base_text_formatter"
 
 module Rfc
@@ -15,6 +16,8 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
     # ObjectSpace statistics are generally not available on JRuby:
     # RuntimeError (ObjectSpace is disabled; each_object will only work with Class, pass -X+O to enable)
     attr_accessor :output_object_space_stats
+
+    attr_accessor :output_system_load
   end
   self.heartbeat_interval = 10
 
@@ -69,6 +72,9 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
       if self.class.output_object_space_stats
         progress_msg += "; objects: #{ObjectSpace.count_objects[:TOTAL]} total, #{ObjectSpace.count_objects[:FREE]} free"
       end
+      if self.class.output_system_load
+        progress_msg += "\n#{system_load_msg}"
+      end
       output.puts progress_msg
       @reported_percent = this_percent
       @reported_at = Time.now
@@ -76,6 +82,58 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
   end
 
   def dump_failures(notification)
+  end
+
+  private
+
+  def system_load_msg
+    stats = {}
+    IO.readlines('/proc/meminfo').each do |line|
+      measure, value, unit = line.split
+      value = value.to_i
+      if value != 0
+        if unit != 'kB'
+          return "Unexpected unit: #{unit} for #{line}"
+        end
+        value = value * 1024
+        measure.sub!(/:$/, '')
+        stats[measure] = value
+      end
+    end
+
+    mem_used = stats['MemTotal'] - stats['MemFree'] - stats['Buffers'] - stats['Cached']
+    swap_used = stats['SwapTotal'] - stats['SwapFree']
+    buf_used = stats['Buffers'] + stats['Cached']
+    total = stats['MemTotal']
+    swap = stats['SwapTotal']
+    avail = stats['MemFree'] + stats['Buffers'] + stats['Cached']
+
+    msg = "Memory: #{m(mem_used)} RAM + #{m(swap_used)} swap used, #{m(buf_used)} buf, #{m(total)} RAM + #{m(swap)} swap total, #{m(avail)} avail"
+
+    @cpu_time_averager ||= CpuTimeAverager.new
+    @cpu_time_averager.sample
+    if @cpu_time_averager.enough?
+      all = @cpu_time_averager.user_delta +
+        @cpu_time_averager.nice_delta +
+        @cpu_time_averager.system_delta +
+        @cpu_time_averager.irq_delta +
+        @cpu_time_averager.iowait_delta +
+        @cpu_time_averager.idle_delta
+      used = ((@cpu_time_averager.user_delta +
+        @cpu_time_averager.nice_delta +
+        @cpu_time_averager.system_delta +
+        @cpu_time_averager.irq_delta) * 100.0 / all).round
+      idle = (@cpu_time_averager.idle_delta * 100 / all).round
+      iowait = (@cpu_time_averager.iowait_delta * 100 / all).round
+
+      msg += "\nCPU: %2d%% used, %2d%% iowait, %2d%% idle" % [used, iowait, idle]
+    end
+
+    msg
+  end
+
+  def m(value)
+    "#{(value / 1024.0 / 1024).round}M"
   end
 end
 end
