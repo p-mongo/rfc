@@ -102,9 +102,9 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
           return "Unexpected unit: #{unit} for #{line}"
         end
         value = value * 1024
-        measure.sub!(/:$/, '')
-        stats[measure] = value
       end
+      measure.sub!(/:$/, '')
+      stats[measure] = value
     end
 
     mem_used = stats['MemTotal'] - stats['MemFree'] - stats['Buffers'] - stats['Cached']
