@@ -30,6 +30,8 @@ To enable memory and CPU statistics reporting, add to your `spec_helper.rb`:
 
     Rfc::Rif.output_system_load = true
 
+At the end of the run Aif lists up to the first 10 pending examples.
+
 
 ## Announce Formatter (Announce)
 
@@ -46,6 +48,8 @@ RSpec's documentation formatter does.
 
 This is the announce formatter with insta-fail feature. It reports
 failures as soon as they happen, after each example is executed.
+
+At the end of the run Aif lists up to the first 10 pending examples.
 
 
 ## License
