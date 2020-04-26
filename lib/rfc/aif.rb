@@ -1,12 +1,15 @@
+require 'rfc/shared/brief_pending'
 require 'rfc/announce'
 
 module Rfc
 class Aif < Announce
+  include Shared::BriefPending
+
   RSpec::Core::Formatters.register self,
     :example_group_started, :example_group_finished,
     :start, :example_started,
     :example_passed, :example_pending, :example_failed,
-    :dump_failures, :dump_summary
+    :dump_summary, :dump_failures, :dump_pending
 
   def start(notification)
     @failed_count = 0

@@ -1,9 +1,12 @@
 require 'rspec/core'
 require 'rfc/cpu_time_averager'
+require 'rfc/shared/brief_pending'
 RSpec::Support.require_rspec_core "formatters/base_text_formatter"
 
 module Rfc
 class Rif < RSpec::Core::Formatters::BaseTextFormatter
+  include Shared::BriefPending
+
   RSpec::Core::Formatters.register self,
     :message, :dump_summary, :dump_failures, :dump_pending, :seed,
     :example_passed, :example_pending, :example_failed
@@ -88,27 +91,6 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
   end
 
   def dump_failures(notification)
-  end
-
-  def dump_pending(notification)
-    return if notification.pending_examples.empty?
-
-    formatted = "\nPending: (Failures listed here are expected and do not affect your suite's status)\n".dup
-
-    pending_notifications = notification.pending_notifications
-    colorizer = ::RSpec::Core::Formatters::ConsoleCodes
-
-    pending_notifications.first(10).each_with_index do |notification, index|
-      formatted << notification.fully_formatted(index.next, colorizer)
-    end
-
-    if pending_notifications.length > 10
-      formatted << colorizer.wrap(
-        "\n+ #{pending_notifications.length-10} more pending examples",
-        :yellow)
-    end
-
-    output.puts(formatted)
   end
 
   private
