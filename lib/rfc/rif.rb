@@ -90,6 +90,27 @@ class Rif < RSpec::Core::Formatters::BaseTextFormatter
   def dump_failures(notification)
   end
 
+  def dump_pending(notification)
+    return if notification.pending_examples.empty?
+
+    formatted = "\nPending: (Failures listed here are expected and do not affect your suite's status)\n".dup
+
+    pending_notifications = notification.pending_notifications
+    colorizer = ::RSpec::Core::Formatters::ConsoleCodes
+
+    pending_notifications.first(10).each_with_index do |notification, index|
+      formatted << notification.fully_formatted(index.next, colorizer)
+    end
+
+    if pending_notifications.length > 10
+      formatted << colorizer.wrap(
+        "\n+ #{pending_notifications.length-10} more pending examples",
+        :yellow)
+    end
+
+    output.puts(formatted)
+  end
+
   private
 
   def system_load_msg
